@@ -53,7 +53,7 @@ export default function FAQ() {
   };
 
   return (
-    <section id="faq" className="py-24 bg-brand-bg relative border-t border-brand-muted/30">
+    <section id="faq" className="py-12 sm:py-24 bg-brand-bg relative border-t border-brand-muted/30">
       <div className="max-w-4xl mx-auto px-6">
         
         {/* Section Header */}

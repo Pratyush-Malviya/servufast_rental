@@ -182,7 +182,7 @@ export default function ApplyForm() {
   ];
 
   return (
-    <section id="apply" className="py-24 bg-brand-secondary border-t border-brand-muted/30">
+    <section id="apply" className="py-12 sm:py-24 bg-brand-secondary border-t border-brand-muted/30">
       <div className="max-w-7xl mx-auto px-6">
         
         {/* Main Grid: Info Left, Form Right */}
@@ -191,7 +191,7 @@ export default function ApplyForm() {
           {/* Left Block: Contact Details */}
           <div className="lg:col-span-4 space-y-10">
             <div>
-              <span className="font-mono text-xs uppercase tracking-widest text-[#1F3A2D] font-semibold">
+              <span className="font-mono text-xs uppercase tracking-widest text-brand-gold font-semibold">
                 Vetted Fleet Booking
               </span>
               <h2 className="text-3xl md:text-5xl text-brand-cream mt-2 leading-tight">
@@ -534,8 +534,8 @@ export default function ApplyForm() {
                       </div>
                     </div>
 
-                    <div className="p-3.5 bg-[#1F3A2D]/5 dark:bg-brand-gold/5 rounded-xl border border-[#1F3A2D]/15 dark:border-brand-gold/15 space-y-1">
-                      <p className="text-[11px] font-mono uppercase tracking-wider text-[#1F3A2D] dark:text-brand-gold font-bold flex items-center gap-1.5 leading-none">
+                    <div className="p-3.5 bg-brand-gold/5 rounded-xl border border-brand-gold/15 space-y-1">
+                      <p className="text-[11px] font-mono uppercase tracking-wider text-brand-gold font-bold flex items-center gap-1.5 leading-none">
                         <CheckCircle size={12} /> Appointment Locked
                       </p>
                       <p className="text-[10px] text-brand-cream-dim leading-relaxed normal-case">

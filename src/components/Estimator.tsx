@@ -30,7 +30,7 @@ export default function Estimator() {
   const netPct = (netEarnings / grossGigEarnings) * 100;
 
   return (
-    <section id="estimator" className="py-24 bg-brand-bg relative overflow-hidden border-t border-brand-muted/20">
+    <section id="estimator" className="py-12 sm:py-24 bg-brand-bg relative overflow-hidden border-t border-brand-muted/20">
       {/* Background radial highlight */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-brand-gold/5 blur-[120px] rounded-full pointer-events-none" />
 

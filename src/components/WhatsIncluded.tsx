@@ -30,7 +30,7 @@ export default function WhatsIncluded() {
   ];
 
   return (
-    <section id="whats-included" className="py-24 bg-brand-secondary border-t border-brand-muted/30">
+    <section id="whats-included" className="py-12 sm:py-24 bg-brand-secondary border-t border-brand-muted/30">
       <div className="max-w-6xl mx-auto px-6">
         
         {/* Section Header */}

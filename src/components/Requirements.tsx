@@ -52,7 +52,7 @@ export default function Requirements() {
   ];
 
   return (
-    <section id="requirements" className="py-24 bg-brand-bg relative overflow-hidden border-t border-brand-muted/30">
+    <section id="requirements" className="py-12 sm:py-24 bg-brand-bg relative overflow-hidden border-t border-brand-muted/30">
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         
         {/* Main Grid: Split Left & Right */}

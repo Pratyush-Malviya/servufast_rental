@@ -76,7 +76,7 @@ export default function ChatWidget() {
   return (
     <>
       {/* Floating Chat Trigger */}
-      <div className="fixed bottom-6 right-6 z-40">
+      <div className="fixed bottom-20 sm:bottom-6 right-4 sm:right-6 z-40">
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="w-14 h-14 rounded-full bg-brand-gold hover:bg-brand-gold-light text-brand-bg flex items-center justify-center shadow-xl shadow-brand-gold/15 transition-all duration-300 relative cursor-pointer group"
@@ -100,7 +100,7 @@ export default function ChatWidget() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ duration: 0.25, ease: "easeOut" }}
-            className="fixed bottom-24 right-6 w-[350px] sm:w-[380px] h-[500px] bg-brand-card/95 backdrop-blur-xl border border-brand-cream/10 rounded-[20px] shadow-2xl shadow-black/80 flex flex-col overflow-hidden z-40"
+            className="fixed bottom-36 sm:bottom-24 right-4 sm:right-6 w-[calc(100vw-2rem)] sm:w-[380px] h-[450px] sm:h-[500px] bg-brand-card/95 backdrop-blur-xl border border-brand-cream/10 rounded-[20px] shadow-2xl shadow-black/80 flex flex-col overflow-hidden z-40"
           >
             {/* Header */}
             <div className="p-4 bg-brand-muted/70 border-b border-brand-cream/5 flex items-center justify-between">

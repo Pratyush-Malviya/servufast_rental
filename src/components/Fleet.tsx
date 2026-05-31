@@ -176,7 +176,7 @@ export default function Fleet() {
     : services.filter(s => s.category === selectedCategory);
 
   return (
-    <section id="fleet" className="py-24 bg-brand-secondary border-t border-brand-muted/30">
+    <section id="fleet" className="py-12 sm:py-24 bg-brand-secondary border-t border-brand-muted/30">
       <div className="max-w-7xl mx-auto px-6">
         
         {/* Section Header */}
@@ -364,7 +364,7 @@ export default function Fleet() {
                   {/* Bottom CTA Block */}
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-t border-brand-muted/40 pt-6 gap-4">
                     <div>
-                      <span className="text-[10px] font-mono uppercase tracking-widest text-[#827266] block font-semibold">
+                      <span className="text-[10px] font-mono uppercase tracking-widest text-brand-cream-subtle block font-semibold">
                         Transparent Price Schema
                       </span>
                       <span className="font-mono text-xl text-brand-cream font-medium">
@@ -496,7 +496,7 @@ export default function Fleet() {
                       {/* Floating Mini Reports card container that triggers elegantly on hover */}
                       <div className="absolute right-0 top-full mt-2 opacity-0 group-hover/bar:opacity-100 pointer-events-none transition-all duration-300 transform translate-y-1 group-hover/bar:translate-y-0 z-40 bg-brand-card/95 border border-brand-gold/30 rounded-xl p-3.5 shadow-2xl flex flex-wrap gap-4 items-center border-brand-gold/20 min-w-[280px]">
                         <div className="space-y-0.5">
-                          <span className="text-[9px] uppercase font-mono tracking-widest text-[#827266] block">
+                          <span className="text-[9px] uppercase font-mono tracking-widest text-brand-cream-subtle block">
                             Active Shifts
                           </span>
                           <span className="text-xs font-mono font-bold text-brand-cream block">
@@ -505,7 +505,7 @@ export default function Fleet() {
                         </div>
                         <div className="w-px h-8 bg-brand-muted/40 hidden sm:block" />
                         <div className="space-y-0.5">
-                          <span className="text-[9px] uppercase font-mono tracking-widest text-[#827266] block">
+                          <span className="text-[9px] uppercase font-mono tracking-widest text-brand-cream-subtle block">
                             Trips Led
                           </span>
                           <span className="text-xs font-mono font-bold text-brand-cream block">

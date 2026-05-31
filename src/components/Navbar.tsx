@@ -131,7 +131,7 @@ export default function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.25, ease: "easeInOut" }}
-            className="fixed top-0 left-0 w-full bg-brand-bg/95 backdrop-blur-2xl border-b border-brand-muted/70 pt-24 pb-8 px-6 z-45"
+            className="fixed top-0 left-0 w-full max-h-screen overflow-y-auto bg-brand-bg/95 backdrop-blur-2xl border-b border-brand-muted/70 pt-24 pb-8 px-6 z-45"
           >
             <div className="flex flex-col space-y-6">
               {menuItems.map((item) => (
