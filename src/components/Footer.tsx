@@ -16,7 +16,7 @@ export default function Footer() {
               href="#top"
               className="font-serif text-3xl tracking-normal text-brand-cream hover:text-brand-gold transition-colors block"
             >
-              Servu<span className="italic font-light text-brand-gold">fast</span>
+              ServU<span className="italic font-light text-brand-gold">fast</span>
             </a>
             <p className="text-xs text-brand-cream-dim leading-relaxed font-light max-w-sm">
               ServUfast is the premier rent-to-drive car fleet network. We provide zero-maintenance premium hatchbacks, executive sedans, and high-saving electric EVs equipped with complete commercial registration and comprehensive insurance coverage.

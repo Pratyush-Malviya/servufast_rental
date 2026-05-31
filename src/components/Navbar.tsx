@@ -55,7 +55,7 @@ export default function Navbar() {
             href="#top"
             className="font-serif text-2xl tracking-normal text-brand-cream hover:text-brand-gold transition-colors duration-200"
           >
-            Servu<span className="italic font-light text-brand-gold">fast</span>
+            ServU<span className="italic font-light text-brand-gold">fast</span>
           </a>
 
           {/* Desktop Menu */}
