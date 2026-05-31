@@ -1,0 +1,252 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Fraunces", serif;
+  --font-serif: "Fraunces", serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --color-brand-bg: var(--bg-primary);
+  --color-brand-secondary: var(--bg-secondary);
+  --color-brand-card: var(--bg-card);
+  --color-brand-muted: var(--bg-muted);
+  --color-brand-cream: var(--cream);
+  --color-brand-cream-dim: var(--cream-dim);
+  --color-brand-cream-subtle: var(--cream-subtle);
+  --color-brand-gold: var(--gold);
+  --color-brand-gold-light: var(--gold-light);
+}
+
+:root {
+  /* Design system custom properties */
+  --bg-primary: #FCFBFA;
+  --bg-secondary: #F4F3F0;
+  --bg-card: #FFFFFF;
+  --bg-muted: #EADEC9;
+  
+  --nav-bg-rgb: 252, 251, 250;
+  --card-bg-rgb: 255, 255, 255;
+  --grid-color: rgba(31, 58, 45, 0.03);
+  --glow-blend: multiply;
+  --glow-opacity: 0.08;
+  
+  --cream: #1C1510;
+  --cream-dim: #4E4239;
+  --cream-subtle: #827266;
+  
+  --gold: #1F3A2D;
+  --gold-light: #2E5542;
+  --gold-glow: rgba(31, 58, 45, 0.1);
+  
+  --border: rgba(28, 21, 16, 0.08);
+  --border-hover: rgba(28, 21, 16, 0.15);
+  --overlay: rgba(28, 21, 16, 0.45);
+  
+  --error: #EF4444;
+  --success: #10B981;
+}
+
+html.dark {
+  /* Ultra-luxurious Obsidian Jade Dark Theme */
+  --bg-primary: #0C0F0D;
+  --bg-secondary: #131815;
+  --bg-card: #18201C;
+  --bg-muted: #24302A;
+  
+  --nav-bg-rgb: 12, 15, 13;
+  --card-bg-rgb: 24, 32, 28;
+  --grid-color: rgba(212, 175, 55, 0.03);
+  --glow-blend: screen;
+  --glow-opacity: 0.22;
+  
+  --cream: #FAF9F6;
+  --cream-dim: #DCD8D3;
+  --cream-subtle: #968F87;
+  
+  --gold: #D4AF37;
+  --gold-light: #E5C158;
+  --gold-glow: rgba(212, 175, 55, 0.155);
+  
+  --border: rgba(250, 249, 246, 0.08);
+  --border-hover: rgba(250, 249, 246, 0.16);
+  --overlay: rgba(12, 15, 13, 0.85);
+}
+
+/* Base resets & styles */
+html {
+  scroll-behavior: smooth;
+  background-color: var(--bg-primary);
+  color: var(--cream-dim);
+}
+
+body {
+  font-family: "Fraunces", serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom scrollbar matching luxury theme */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--bg-muted);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gold);
+}
+
+/* Grain texture overlay styling */
+.grain-overlay {
+  position: relative;
+}
+.grain-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.02'/%3E%3C/svg%3E");
+  pointer-events: none;
+  opacity: 0.35;
+  z-index: 2;
+}
+
+/* Glassmorphism navbar blurred state */
+.nav-scrolled {
+  background-color: rgba(var(--nav-bg-rgb), 0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+
+/* Typography styles matching luxury look */
+.editorial-lead {
+  font-family: "Fraunces", serif;
+  font-style: normal;
+  font-weight: 400;
+}
+
+/* Custom list items with Roman numeral accents */
+.roman-numeral::before {
+  font-family: "JetBrains Mono", monospace;
+  color: var(--gold);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+}
+
+/* Pulse animation for live online indicator */
+@keyframes pulse-gold {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(31, 58, 45, 0.5); }
+  70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(31, 58, 45, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(31, 58, 45, 0); }
+}
+
+.live-indicator {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background-color: var(--gold);
+  border-radius: 50%;
+  animation: pulse-gold 2s infinite;
+}
+
+/* Futuristic background grid overlay */
+.cyber-grid {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+}
+
+/* Neon radiant glowing orbs */
+.glow-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(130px);
+  opacity: var(--glow-opacity);
+  mix-blend-mode: var(--glow-blend);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Animated gradient border on hover */
+.premium-border-glow {
+  position: relative;
+  transition: all 0.4s ease;
+}
+.premium-border-glow::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  background: linear-gradient(135deg, rgba(31, 58, 45, 0.3) 0%, transparent 40%, rgba(31, 58, 45, 0.08) 100%);
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.premium-border-glow:hover::before {
+  opacity: 1;
+}
+
+/* High-tech keyframe animations */
+@keyframes slow-wander {
+  0% { transform: translate(0px, 0px) scale(1); }
+  33% { transform: translate(30px, -50px) scale(1.1); }
+  66% { transform: translate(-20px, 20px) scale(0.95); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+.animate-wander-slow {
+  animation: slow-wander 25s infinite ease-in-out;
+}
+
+.animate-wander-medium {
+  animation: slow-wander 18s infinite ease-in-out reverse;
+}
+
+/* Interactive focus card highlight */
+.glass-cyber-card {
+  background: rgba(var(--card-bg-rgb), 0.82);
+  backdrop-filter: blur(15px);
+  border: 1.5px solid var(--border);
+}
+.glass-cyber-card:hover {
+  border-color: var(--gold-light);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3), 0 0 15px 0 var(--gold-glow);
+}
+
+/* Selection formatting */
+/* Premium loading shimmer effect */
+@keyframes luxury-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.shimmer-bg {
+  background: linear-gradient(
+    90deg,
+    rgba(234, 222, 201, 0.15) 25%,
+    rgba(234, 222, 201, 0.45) 37%,
+    rgba(234, 222, 201, 0.15) 63%
+  );
+  background-size: 200% 100%;
+  animation: luxury-shimmer 1.5s infinite ease-in-out;
+}
+
+::selection {
+  background-color: var(--gold);
+  color: #FFFFFF;
+}
+
+/* Luxury customized cursor hiding configuration for desktop devices */
+@media (min-width: 768px) {
+  html, body, a, button, select, input, textarea, [role="button"], .cursor-pointer {
+    cursor: none !important;
+  }
+}

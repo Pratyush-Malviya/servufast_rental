@@ -1,0 +1,6 @@
+{
+  "name": "ServUfast",
+  "description": "ServUfast - Luxury Editorial Service Booking & Partner Platform",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
