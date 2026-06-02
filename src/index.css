@@ -16,35 +16,7 @@
   --color-brand-gold-light: var(--gold-light);
 }
 
-:root {
-  /* Design system custom properties */
-  --bg-primary: #FCFBFA;
-  --bg-secondary: #F4F3F0;
-  --bg-card: #FFFFFF;
-  --bg-muted: #EADEC9;
-  
-  --nav-bg-rgb: 252, 251, 250;
-  --card-bg-rgb: 255, 255, 255;
-  --grid-color: rgba(31, 58, 45, 0.03);
-  --glow-blend: multiply;
-  --glow-opacity: 0.08;
-  
-  --cream: #1C1510;
-  --cream-dim: #4E4239;
-  --cream-subtle: #827266;
-  
-  --gold: #1F3A2D;
-  --gold-light: #2E5542;
-  --gold-glow: rgba(31, 58, 45, 0.1);
-  
-  --border: rgba(28, 21, 16, 0.08);
-  --border-hover: rgba(28, 21, 16, 0.15);
-  --overlay: rgba(28, 21, 16, 0.45);
-  
-  --error: #EF4444;
-  --success: #10B981;
-}
-
+:root,
 html.dark {
   /* Ultra-luxurious Obsidian Jade Dark Theme */
   --bg-primary: #060A08;
@@ -69,6 +41,35 @@ html.dark {
   --border: rgba(250, 249, 246, 0.1);
   --border-hover: rgba(250, 249, 246, 0.18);
   --overlay: rgba(6, 10, 8, 0.85);
+  
+  --error: #EF4444;
+  --success: #10B981;
+}
+
+html:not(.dark) {
+  /* Design system custom properties for Light Theme */
+  --bg-primary: #FCFBFA;
+  --bg-secondary: #F4F3F0;
+  --bg-card: #FFFFFF;
+  --bg-muted: #EADEC9;
+  
+  --nav-bg-rgb: 252, 251, 250;
+  --card-bg-rgb: 255, 255, 255;
+  --grid-color: rgba(31, 58, 45, 0.03);
+  --glow-blend: multiply;
+  --glow-opacity: 0.08;
+  
+  --cream: #1C1510;
+  --cream-dim: #4E4239;
+  --cream-subtle: #827266;
+  
+  --gold: #1F3A2D;
+  --gold-light: #2E5542;
+  --gold-glow: rgba(31, 58, 45, 0.1);
+  
+  --border: rgba(28, 21, 16, 0.08);
+  --border-hover: rgba(28, 21, 16, 0.15);
+  --overlay: rgba(28, 21, 16, 0.45);
 }
 
 /* Base resets & styles */

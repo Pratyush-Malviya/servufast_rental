@@ -35,6 +35,169 @@ function getGenAI() {
 
 // Memory / File stored list of leads for active verification
 const LEADS_FILE = path.join(process.cwd(), "leads_database.json");
+const VEHICLES_FILE = path.join(process.cwd(), "vehicles_database.json");
+const CONFIG_FILE = path.join(process.cwd(), "config_database.json");
+
+const DEFAULT_BRAND_CONFIG = {
+  passcode: "admin",
+  contact: {
+    phone: "+1 (865) 696-9885",
+    phoneTel: "+18656969885",
+    email: "registration@servufast.com",
+    address: "Executive Office, Financial District, San Francisco, CA 94111",
+  },
+  social: {
+    whatsapp: "https://wa.me/18656969885",
+    facebook: "",
+    twitter: "",
+    instagram: "",
+    linkedin: "",
+  },
+  general: {
+    brandName: "ServUfast",
+    brandSubtitle: "fast",
+    editionText: "Edition No. 01 · 2026",
+    copyrightText: "© 2026 ServUfast LLC. All rights reserved. Registered under Delaware and United States Corporate Standards.",
+  }
+};
+
+function getConfig() {
+  try {
+    if (fs.existsSync(CONFIG_FILE)) {
+      const data = JSON.parse(fs.readFileSync(CONFIG_FILE, "utf-8"));
+      return {
+        passcode: data.passcode || DEFAULT_BRAND_CONFIG.passcode,
+        contact: { ...DEFAULT_BRAND_CONFIG.contact, ...(data.contact || {}) },
+        social: { ...DEFAULT_BRAND_CONFIG.social, ...(data.social || {}) },
+        general: { ...DEFAULT_BRAND_CONFIG.general, ...(data.general || {}) },
+      };
+    }
+  } catch (err) {
+    console.error("Failed to read config:", err);
+  }
+  return DEFAULT_BRAND_CONFIG;
+}
+
+function saveConfig(config: any) {
+  try {
+    fs.writeFileSync(CONFIG_FILE, JSON.stringify(config, null, 2));
+    return true;
+  } catch (err) {
+    console.error("Failed to write config:", err);
+    return false;
+  }
+}
+
+function getPasscode() {
+  return getConfig().passcode;
+}
+
+function savePasscode(passcode: string) {
+  const currentConfig = getConfig();
+  currentConfig.passcode = passcode;
+  return saveConfig(currentConfig);
+}
+
+const DEFAULT_VEHICLES = [
+  {
+    id: "hatchback",
+    title: "Hatchback Pro Series",
+    description: "Highly fuel-efficient Toyota Yaris or compact Honda Fit models tailored for quick city delivery and passenger bookings.",
+    category: "hatchback",
+    badge: "Available now",
+    stats: [
+      { label: "Optimal Fuels", value: "Regular Gas" },
+      { label: "Avg. Mileage", value: "32-38 MPG" },
+      { label: "Partner Rating", value: "4.91 / 5" },
+      { label: "Pickup Depot", value: "Central Metro Depots" },
+    ],
+    inclusions: [
+      "Tested structural safety configurations",
+      "Excellent air flow systems for maximum comfort",
+      "Includes standard routine engine maintenance",
+      "Full comprehensive zero-deductible insurance guard"
+    ],
+    price: "$150 / week",
+    isAvailable: true,
+    image: "https://images.unsplash.com/photo-1627454820516-dc767bcb4d3e?auto=format&fit=crop&w=800&q=80",
+  },
+  {
+    id: "sedan",
+    title: "Premium Sedan Range",
+    description: "Elegant Toyota Corolla or spacious Hyundai Elantra models with comfortable rear legroom and enlarged trunk storage for high-value airport rides.",
+    category: "sedan",
+    badge: "Available now",
+    stats: [
+      { label: "Optimal Fuels", value: "Gas / Hybrid" },
+      { label: "Trunk Cargo", value: "14+ Cubic Feet" },
+      { label: "Partner Rating", value: "4.94 / 5" },
+      { label: "Client Growth", value: "+45% Accept Rate" },
+    ],
+    inclusions: [
+      "High rating layout perfect for prime hailing classes",
+      "Real-time GPS security tracking pre-configured",
+      "Complimentary high-tensile suspension screening",
+      "Fully registered commercial rideshare compliance"
+    ],
+    price: "$200 / week",
+    isAvailable: true,
+    image: "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=800&q=80",
+  },
+  {
+    id: "electric",
+    title: "Electric Zero-Emission EV Fleet",
+    description: "Ultra-quiet, advanced Tesla Model 3 or Chevrolet Bolt EV vehicles with immediate fast-charger compatibility to maximize your pure margins.",
+    category: "electric",
+    badge: "Available now",
+    stats: [
+      { label: "Drive System", value: "100% Battery EV" },
+      { label: "Real Range", value: "220+ miles / charge" },
+      { label: "Partner Rating", value: "4.96 / 5" },
+      { label: "Battery Guard", value: "Full OEM Warranty" },
+    ],
+    inclusions: [
+      "Save $20+ daily in standard combustive fuel bills",
+      "Direct priority ticketing on ride-hailing applications",
+      "Includes standard fast-charger heavy cable hookups",
+      "Zero-emission metropolitan green routing pass"
+    ],
+    price: "$220 / week",
+    isAvailable: true,
+    image: "https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=800&q=80",
+  },
+  {
+    id: "luxury",
+    title: "Luxury Executive Series",
+    description: "Spacious Toyota Sienna Hybrid or elite premium SUVs. Perfect for luxury airport charters and corporate transfers.",
+    category: "luxury",
+    badge: "Waitlist",
+    stats: [
+      { label: "Engine Type", value: "Premium Hybrid / Gas" },
+      { label: "Seat Count", value: "7 Captain Seats" },
+      { label: "Partner Rating", value: "4.98 / 5" },
+      { label: "Onboard Tech", value: "Premium Acoustic" },
+    ],
+    inclusions: [
+      "Plush luxury leather upholstery design and layout",
+      "Access to elite high-paying long-haul hotel accounts",
+      "24/7 dedicated executive fleet concierge hotline",
+      "Double-vetted vehicle security escort setups"
+    ],
+    price: "$290 / week",
+    isAvailable: false,
+    image: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80",
+  }
+];
+
+function initVehiclesFile() {
+  try {
+    if (!fs.existsSync(VEHICLES_FILE)) {
+      fs.writeFileSync(VEHICLES_FILE, JSON.stringify(DEFAULT_VEHICLES, null, 2));
+    }
+  } catch (err) {
+    console.error("Failed to initialize vehicles file:", err);
+  }
+}
 
 function saveLead(lead: any) {
   try {
@@ -54,6 +217,142 @@ function saveLead(lead: any) {
 // API health endpoint
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok" });
+});
+
+// GET brand configuration metadata (public settings)
+app.get("/api/config", (req, res) => {
+  try {
+    const { passcode, ...publicConfig } = getConfig();
+    res.json(publicConfig);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to load brand environment configuration." });
+  }
+});
+
+// Update brand configuration settings (requires passcode verification)
+app.put("/api/admin/config", (req, res) => {
+  try {
+    const { passcode, config } = req.body;
+    const currentPasscode = getPasscode();
+    
+    if (!passcode || passcode.trim().toLowerCase() !== currentPasscode.trim().toLowerCase()) {
+      return res.status(401).json({ error: "Unauthorized: Invalid administrative authorization key." });
+    }
+    
+    if (!config || typeof config !== "object") {
+      return res.status(400).json({ error: "Invalid configuration entity payload." });
+    }
+
+    const currentConfig = getConfig();
+    const updatedConfig = {
+      passcode: currentConfig.passcode, // retain passcode
+      contact: { ...currentConfig.contact, ...(config.contact || {}) },
+      social: { ...currentConfig.social, ...(config.social || {}) },
+      general: { ...currentConfig.general, ...(config.general || {}) },
+    };
+
+    const success = saveConfig(updatedConfig);
+    if (success) {
+      const { passcode: _, ...publicResponse } = updatedConfig;
+      return res.json({ success: true, config: publicResponse });
+    } else {
+      return res.status(500).json({ error: "Could not persist brand configuration properties." });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Failed to update configuration settings." });
+  }
+});
+
+// Verify Admin Passcode
+app.post("/api/admin/verify", (req, res) => {
+  try {
+    const { passcode } = req.body;
+    const current = getPasscode();
+    if (passcode && passcode.trim().toLowerCase() === current.trim().toLowerCase()) {
+      return res.json({ success: true });
+    }
+    return res.status(401).json({ error: "Invalid master key passcode." });
+  } catch (error) {
+    res.status(500).json({ error: "Intrusion protection system error." });
+  }
+});
+
+// Change Admin Passcode
+app.post("/api/admin/change-passcode", (req, res) => {
+  try {
+    const { currentPasscode, newPasscode } = req.body;
+    const current = getPasscode();
+    if (!currentPasscode || currentPasscode.trim().toLowerCase() !== current.trim().toLowerCase()) {
+      return res.status(401).json({ error: "Incorrect current passcode. Please enter the valid existing validation key." });
+    }
+    if (!newPasscode || newPasscode.trim().length === 0) {
+      return res.status(400).json({ error: "New passcode validation failed. Passcode cannot be blank." });
+    }
+    const success = savePasscode(newPasscode.trim());
+    if (success) {
+      return res.json({ success: true, message: "Security authorization credentials updated successfully." });
+    }
+    return res.status(500).json({ error: "Database lock conflict. Master passcode change ignored." });
+  } catch (error) {
+    res.status(500).json({ error: "Passcode rotation module failure." });
+  }
+});
+
+// GET Vehicles List
+app.get("/api/vehicles", (req, res) => {
+  try {
+    initVehiclesFile();
+    const data = fs.readFileSync(VEHICLES_FILE, "utf-8");
+    res.json(JSON.parse(data));
+  } catch (error) {
+    res.status(500).json({ error: "Failed to read vehicles database" });
+  }
+});
+
+// Update Vehicles List
+app.put("/api/admin/vehicles", (req, res) => {
+  try {
+    initVehiclesFile();
+    const newVehicles = req.body;
+    if (!Array.isArray(newVehicles)) {
+      return res.status(400).json({ error: "Invalid vehicles list format" });
+    }
+    fs.writeFileSync(VEHICLES_FILE, JSON.stringify(newVehicles, null, 2));
+    res.json({ success: true, vehicles: newVehicles });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to update vehicles database" });
+  }
+});
+
+// GET All Leads
+app.get("/api/admin/leads", (req, res) => {
+  try {
+    let leads: any[] = [];
+    if (fs.existsSync(LEADS_FILE)) {
+      leads = JSON.parse(fs.readFileSync(LEADS_FILE, "utf-8"));
+    }
+    // Sort leads by creation date descending (newest first)
+    leads.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    res.json(leads);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to load applications list" });
+  }
+});
+
+// DELETE a specific lead
+app.delete("/api/admin/leads/:id", (req, res) => {
+  try {
+    const { id } = req.params;
+    let leads: any[] = [];
+    if (fs.existsSync(LEADS_FILE)) {
+      leads = JSON.parse(fs.readFileSync(LEADS_FILE, "utf-8"));
+    }
+    const filtered = leads.filter((l) => l.id !== id);
+    fs.writeFileSync(LEADS_FILE, JSON.stringify(filtered, null, 2));
+    res.json({ success: true, message: `Lead ${id} has been removed` });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to delete lead from database" });
+  }
 });
 
 // App lead submission route

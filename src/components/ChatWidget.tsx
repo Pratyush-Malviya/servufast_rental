@@ -1,21 +1,30 @@
 import React, { useState, useRef, useEffect } from "react";
-import { MessageSquare, X, Send, Bot, User, CornerDownLeft, Sparkles } from "lucide-react";
+import { MessageSquare, X, Send, User, CornerDownLeft, Headphones, UserCheck } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { ChatMessage } from "../types";
+import { useConfig } from "../hooks/useConfig";
 
 export default function ChatWidget() {
+  const { config } = useConfig();
+  const { general } = config;
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    {
-      id: "intro",
-      sender: "bot",
-      text: "Hello! I am your ServUfast AI Concierge. Ask me anything about our premium rent-to-drive fleet, vehicle weekly rates, document qualifications, zero-maintenance guarantees, or rapid depot pickup locations.",
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-    },
-  ]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputText, setInputText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (messages.length === 0) {
+      setMessages([
+        {
+          id: "intro",
+          sender: "bot",
+          text: `Hello! I'm David, your Client Support Coordinator at ${general?.brandName || "ServUfast"}${general?.brandSubtitle || "fast"}. If you have any questions about our standard rent-to-drive premium fleet, weekly rates, document qualifications, or rapid depot pickup locations, please let me know.`,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        }
+      ]);
+    }
+  }, [general, messages.length]);
 
   // Auto scroll to bottom
   useEffect(() => {

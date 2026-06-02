@@ -1,18 +1,14 @@
 import { useState, useEffect } from "react";
 import { Menu, X, PhoneCall, Sun, Moon } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
+import { useConfig } from "../hooks/useConfig";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isDark, setIsDark] = useState(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("theme");
-      if (saved) return saved === "dark";
-      return false;
-    }
-    return false;
-  });
+  const [isDark, setIsDark] = useState(true);
+  const { config } = useConfig();
+  const { contact, general } = config;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,6 +18,17 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Sync preference on initial load
+  useEffect(() => {
+    const saved = localStorage.getItem("theme");
+    if (saved === "light") {
+      setIsDark(false);
+    } else {
+      setIsDark(true);
+    }
+  }, []);
+
+  // Apply class changes and save preference
   useEffect(() => {
     const root = window.document.documentElement;
     if (isDark) {
@@ -55,7 +62,7 @@ export default function Navbar() {
             href="#top"
             className="font-serif text-2xl tracking-normal text-brand-cream hover:text-brand-gold transition-colors duration-200"
           >
-            ServU<span className="italic font-light text-brand-gold">fast</span>
+            {general.brandName}<span className="italic font-light text-brand-gold">{general.brandSubtitle}</span>
           </a>
 
           {/* Desktop Menu */}
@@ -74,11 +81,11 @@ export default function Navbar() {
           {/* Desktop Actions */}
           <div className="hidden lg:flex items-center space-x-6">
             <a
-              href="tel:+18656969885"
+              href={`tel:${contact.phoneTel}`}
               className="flex items-center gap-2 font-mono text-xs text-brand-cream-dim hover:text-brand-gold transition-colors duration-200"
             >
               <PhoneCall size={14} className="text-brand-gold" />
-              +1 (865) 696-9885
+              {contact.phone}
             </a>
             <button
               onClick={() => setIsDark(!isDark)}
@@ -106,9 +113,9 @@ export default function Navbar() {
               {isDark ? <Sun size={15} /> : <Moon size={15} />}
             </button>
             <a
-              href="tel:+18656969885"
+              href={`tel:${contact.phoneTel}`}
               className="p-2 border border-brand-muted rounded-full text-brand-gold hover:text-brand-cream hover:border-brand-gold transition-colors duration-200"
-              aria-label="Call ServUfast"
+              aria-label={`Call ${general.brandName}`}
             >
               <PhoneCall size={15} />
             </a>
@@ -146,11 +153,11 @@ export default function Navbar() {
               ))}
               <div className="pt-4 flex flex-col space-y-4">
                 <a
-                  href="tel:+18656969885"
+                  href={`tel:${contact.phoneTel}`}
                   className="flex items-center gap-3 font-mono text-sm text-brand-cream-dim hover:text-brand-gold"
                 >
                   <PhoneCall size={16} className="text-brand-gold" />
-                  +1 (865) 696-9885
+                  {contact.phone}
                 </a>
                 <a
                   href="#apply"

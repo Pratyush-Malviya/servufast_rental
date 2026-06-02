@@ -1,7 +1,20 @@
 import { Phone, Mail, Globe, MapPin, ExternalLink } from "lucide-react";
+import { useConfig } from "../hooks/useConfig";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const { config } = useConfig();
+  const { contact, social, general } = config;
+
+  const socialLinks = [
+    social.whatsapp ? { label: "WhatsApp", href: social.whatsapp } : { label: "WhatsApp Contact", href: `https://wa.me/${contact.phoneTel.replace(/[^0-9]/g, "") || "18656969885"}` },
+    social.facebook && { label: "Facebook", href: social.facebook },
+    social.twitter && { label: "Twitter", href: social.twitter },
+    social.instagram && { label: "Instagram", href: social.instagram },
+    social.linkedin && { label: "LinkedIn", href: social.linkedin },
+    !social.facebook && !social.instagram && { label: "Reservation Form", href: "#apply" },
+    !social.twitter && !social.linkedin && { label: "Fleet Guidelines", href: "#faq" },
+  ].filter(Boolean) as { label: string; href: string }[];
 
   return (
     <footer className="bg-brand-bg text-brand-cream-dim border-t border-brand-muted/30 pt-20 pb-10">
@@ -16,21 +29,19 @@ export default function Footer() {
               href="#top"
               className="font-serif text-3xl tracking-normal text-brand-cream hover:text-brand-gold transition-colors block"
             >
-              ServU<span className="italic font-light text-brand-gold">fast</span>
+              {general.brandName}<span className="italic font-light text-brand-gold">{general.brandSubtitle}</span>
             </a>
             <p className="text-xs text-brand-cream-dim leading-relaxed font-light max-w-sm">
-              ServUfast is the premier rent-to-drive car fleet network. We provide zero-maintenance premium hatchbacks, executive sedans, and high-saving electric EVs equipped with complete commercial registration and comprehensive insurance coverage.
+              {general.brandName}{general.brandSubtitle} is the premier rent-to-drive car fleet network. We provide zero-maintenance premium hatchbacks, executive sedans, and high-saving electric EVs equipped with complete commercial registration and comprehensive insurance coverage.
             </p>
-            {/* Social Icons Placeholder Row styled premiumly */}
-            <div className="flex gap-4 pt-2">
-              {[
-                { label: "WhatsApp Contact", href: "https://wa.me/18656969885" },
-                { label: "Reservation Form", href: "#apply" },
-                { label: "Fleet Guidelines", href: "#faq" },
-              ].map((link, idx) => (
+            {/* Social Icons Row styled premiumly */}
+            <div className="flex flex-wrap gap-2 pt-2">
+              {socialLinks.map((link, idx) => (
                 <a
                   key={idx}
                   href={link.href}
+                  target={link.href.startsWith("http") ? "_blank" : undefined}
+                  rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
                   className="font-mono text-[9px] uppercase tracking-wider text-brand-gold hover:text-brand-cream transition-colors border border-brand-muted px-2.5 py-1 rounded"
                 >
                   {link.label}
@@ -115,24 +126,24 @@ export default function Footer() {
             <div className="space-y-3 text-xs font-light">
               <p className="flex items-start gap-2 pt-0.5">
                 <MapPin size={12} className="text-brand-gold shrink-0 mt-0.5" />
-                <span>Executive Office, Financial District, San Francisco, CA 94111</span>
+                <span>{contact.address}</span>
               </p>
               <p className="flex items-center gap-2">
                 <Phone size={12} className="text-brand-gold shrink-0" />
-                <a href="tel:+18656969885" className="hover:text-brand-gold transition-colors font-mono">
-                  +1 (865) 696-9885
+                <a href={`tel:${contact.phoneTel}`} className="hover:text-brand-gold transition-colors font-mono">
+                  {contact.phone}
                 </a>
               </p>
               <p className="flex items-center gap-2">
                 <Mail size={12} className="text-brand-gold shrink-0" />
-                <a href="mailto:registration@servufast.com" className="hover:text-brand-gold transition-colors">
-                  registration@servufast.com
+                <a href={`mailto:${contact.email}`} className="hover:text-brand-gold transition-colors">
+                  {contact.email}
                 </a>
               </p>
               <p className="flex items-center gap-2">
                 <Globe size={12} className="text-brand-gold shrink-0" />
                 <span className="font-mono font-medium text-[10px] text-brand-cream-subtle tracking-wider uppercase">
-                  Edition No. 01 · 2026
+                  {general.editionText}
                 </span>
               </p>
             </div>
@@ -143,12 +154,19 @@ export default function Footer() {
         {/* Bottom copyright line, credentials info */}
         <div className="flex flex-col md:flex-row items-center justify-between pt-8 gap-4 text-[11px] font-mono text-brand-cream-subtle">
           <div>
-            © {currentYear} ServUfast LLC. All rights reserved. Registered under Delaware and United States Corporate Standards.
+            {general.copyrightText}
           </div>
-          <div className="flex gap-4">
+          <div className="flex gap-4 items-center">
             <a href="#faq" className="hover:text-brand-gold transition-colors">Safety Escrow Agreements</a>
             <span className="text-brand-muted">•</span>
             <a href="#apply" className="hover:text-brand-gold transition-colors">Verification Registry</a>
+            <span className="text-brand-muted">•</span>
+            <a 
+              href="#admin" 
+              className="px-2.5 py-0.5 border border-brand-gold/20 text-brand-gold hover:text-brand-cream hover:border-brand-gold bg-brand-gold/5 rounded-[4px] text-[9px] font-mono tracking-widest uppercase transition-colors"
+            >
+              Admin Portal
+            </a>
           </div>
         </div>
 

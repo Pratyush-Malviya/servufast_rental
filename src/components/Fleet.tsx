@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Check, ArrowRight, ShieldCheck, Star } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { ServiceCard } from "../types";
@@ -80,7 +80,7 @@ export default function Fleet() {
     window.dispatchEvent(event);
   };
 
-  const services: ServiceCard[] = [
+  const DEFAULT_SERVICES: ServiceCard[] = [
     {
       id: "hatchback",
       title: "Hatchback Pro Series",
@@ -170,6 +170,28 @@ export default function Fleet() {
       image: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80",
     },
   ];
+
+  const [services, setServices] = useState<ServiceCard[]>(DEFAULT_SERVICES);
+
+  const fetchVehicles = async () => {
+    try {
+      const res = await fetch("/api/vehicles");
+      if (res.ok) {
+        const data = await res.json();
+        setServices(data);
+      }
+    } catch (err) {
+      console.error("Failed to load backend vehicles catalog", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchVehicles();
+    
+    // Add real-time update event listener for immediate pricing/info synchronization
+    window.addEventListener("fleet-updated", fetchVehicles);
+    return () => window.removeEventListener("fleet-updated", fetchVehicles);
+  }, []);
 
   const filteredServices = selectedCategory === "all"
     ? services
