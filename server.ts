@@ -268,10 +268,12 @@ app.get("/api/config", (req, res) => {
 // Update brand configuration settings (requires passcode verification)
 app.put("/api/admin/config", (req, res) => {
   try {
-    const { passcode, config } = req.body;
+    const { passcode, config } = req.body || {};
+    const passcodeStr = passcode !== undefined && passcode !== null ? String(passcode).trim().toLowerCase() : "";
     const currentPasscode = getPasscode();
+    const currentStr = currentPasscode !== undefined && currentPasscode !== null ? String(currentPasscode).trim().toLowerCase() : "";
     
-    if (!passcode || passcode.trim().toLowerCase() !== currentPasscode.trim().toLowerCase()) {
+    if (!passcodeStr || passcodeStr !== currentStr) {
       return res.status(401).json({ error: "Unauthorized: Invalid administrative authorization key." });
     }
     
@@ -295,43 +297,50 @@ app.put("/api/admin/config", (req, res) => {
     } else {
       return res.status(500).json({ error: "Could not persist brand configuration properties." });
     }
-  } catch (error) {
-    res.status(500).json({ error: "Failed to update configuration settings." });
+  } catch (error: any) {
+    res.status(500).json({ error: "Failed to update configuration settings.", details: error?.message });
   }
 });
 
 // Verify Admin Passcode
 app.post("/api/admin/verify", (req, res) => {
   try {
-    const { passcode } = req.body;
+    const { passcode } = req.body || {};
+    const passcodeStr = passcode !== undefined && passcode !== null ? String(passcode).trim().toLowerCase() : "";
     const current = getPasscode();
-    if (passcode && passcode.trim().toLowerCase() === current.trim().toLowerCase()) {
+    const currentStr = current !== undefined && current !== null ? String(current).trim().toLowerCase() : "";
+
+    if (passcodeStr && passcodeStr === currentStr) {
       return res.json({ success: true });
     }
     return res.status(401).json({ error: "Invalid master key passcode." });
-  } catch (error) {
-    res.status(500).json({ error: "Intrusion protection system error." });
+  } catch (error: any) {
+    res.status(500).json({ error: "Intrusion protection system error.", details: error?.message });
   }
 });
 
 // Change Admin Passcode
 app.post("/api/admin/change-passcode", (req, res) => {
   try {
-    const { currentPasscode, newPasscode } = req.body;
+    const { currentPasscode, newPasscode } = req.body || {};
+    const currentPassStr = currentPasscode !== undefined && currentPasscode !== null ? String(currentPasscode).trim().toLowerCase() : "";
     const current = getPasscode();
-    if (!currentPasscode || currentPasscode.trim().toLowerCase() !== current.trim().toLowerCase()) {
+    const currentStr = current !== undefined && current !== null ? String(current).trim().toLowerCase() : "";
+    const newPassStr = newPasscode !== undefined && newPasscode !== null ? String(newPasscode) : "";
+
+    if (!currentPassStr || currentPassStr !== currentStr) {
       return res.status(401).json({ error: "Incorrect current passcode. Please enter the valid existing validation key." });
     }
-    if (!newPasscode || newPasscode.trim().length === 0) {
+    if (newPassStr.trim().length === 0) {
       return res.status(400).json({ error: "New passcode validation failed. Passcode cannot be blank." });
     }
-    const success = savePasscode(newPasscode.trim());
+    const success = savePasscode(newPassStr.trim());
     if (success) {
       return res.json({ success: true, message: "Security authorization credentials updated successfully." });
     }
     return res.status(500).json({ error: "Database lock conflict. Master passcode change ignored." });
-  } catch (error) {
-    res.status(500).json({ error: "Passcode rotation module failure." });
+  } catch (error: any) {
+    res.status(500).json({ error: "Passcode rotation module failure.", details: error?.message });
   }
 });
 
