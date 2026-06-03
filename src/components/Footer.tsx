@@ -17,7 +17,7 @@ export default function Footer() {
   ].filter(Boolean) as { label: string; href: string }[];
 
   return (
-    <footer className="bg-brand-bg text-brand-cream-dim border-t border-brand-muted/30 pt-20 pb-10">
+    <footer className="bg-brand-bg text-brand-cream-dim border-t border-brand-muted/30 pt-20 pb-28 lg:pb-10">
       <div className="max-w-7xl mx-auto px-6">
         
         {/* Core 4-Column Grid */}
