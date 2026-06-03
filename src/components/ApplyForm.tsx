@@ -346,7 +346,7 @@ export default function ApplyForm() {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center overflow-hidden">
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-[#060A08]/90 backdrop-blur-md cursor-zoom-out"
@@ -354,29 +354,57 @@ export default function ApplyForm() {
       />
       
       {/* Scrollable Container */}
-      <div className="relative w-full max-w-2xl max-h-[92vh] sm:max-h-[85vh] overflow-y-auto bg-brand-card border border-brand-cream/15 rounded-[28px] sm:rounded-[36px] shadow-2xl z-10 m-4 text-brand-cream">
+      <div className="relative w-full max-w-2xl h-full sm:h-auto max-h-[100dvh] sm:max-h-[88vh] bg-brand-card border-0 sm:border border-brand-cream/15 rounded-none sm:rounded-[32px] shadow-2xl z-10 text-brand-cream flex flex-col overflow-hidden">
         
-        {/* Close Button or Back trigger */}
+        {/* Sticky Header Bar for Mobile Close + Quick brand logo indicator */}
+        <div className="sticky top-0 left-0 w-full bg-brand-card/95 backdrop-blur-md border-b border-brand-cream/5 px-6 py-4 flex items-center justify-between z-30 sm:hidden shrink-0">
+          <span className="font-serif text-lg text-brand-cream">
+            ServU<span className="italic font-light text-brand-gold">fast</span> Application
+          </span>
+          <button
+            type="button"
+            onClick={() => setIsOpen(false)}
+            className="p-2 rounded-full bg-brand-bg/60 border border-brand-cream/5 text-[#B6B2AB] hover:text-brand-cream hover:border-brand-gold/40 focus:outline-none transition-all duration-200"
+            aria-label="Close modal"
+          >
+            <X size={18} />
+          </button>
+        </div>
+
+        {/* Close Button for Desktop/Tablet (screen >= sm) */}
         <button
           type="button"
           onClick={() => setIsOpen(false)}
-          className="absolute top-5 right-5 sm:top-8 sm:right-8 p-2.5 rounded-full bg-brand-bg/60 border border-brand-cream/5 hover:bg-brand-secondary hover:border-brand-gold/40 text-brand-cream-dim hover:text-brand-cream transition-all duration-300 cursor-pointer z-50 group shadow-md"
+          className="hidden sm:flex absolute top-6 right-6 p-2.5 rounded-full bg-brand-bg/60 border border-brand-cream/5 hover:bg-brand-secondary hover:border-brand-gold/40 text-[#B6B2AB] hover:text-brand-cream transition-all duration-300 cursor-pointer z-50 group shadow-md"
           aria-label="Close modal"
         >
           <X size={18} className="group-hover:rotate-90 transition-transform duration-300" />
         </button>
 
-        <div className="p-6 sm:p-10 md:p-12">
+        {/* Scrollable Content Area */}
+        <div className="overflow-y-auto flex-1 p-5 pt-6 xs:p-6 xs:pt-8 sm:p-12 sm:pt-14 md:p-14 md:pt-16">
           
             {submitSuccess ? (
-              <div className="py-12 px-6 text-center space-y-6 flex flex-col items-center justify-center">
-                <div className="relative w-20 h-20 flex items-center justify-center mb-2">
-                  {/* Subtle pulsing ambient halo */}
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.96 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+                className="py-12 px-2 sm:px-6 text-center space-y-7 flex flex-col items-center justify-center"
+              >
+                <div className="relative w-24 h-24 flex items-center justify-center mb-1">
+                  {/* Outer ambient glow ripple */}
+                  <motion.div
+                    initial={{ scale: 0.6, opacity: 0 }}
+                    animate={{ scale: [1, 1.4, 1], opacity: [0.4, 0.1, 0] }}
+                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut" }}
+                    className="absolute inset-0 rounded-full bg-brand-gold/20"
+                  />
+                  {/* Mid ambient halo ring */}
                   <motion.div
                     initial={{ scale: 0.8, opacity: 0 }}
-                    animate={{ scale: [1, 1.25, 1], opacity: [0.35, 0.08, 0] }}
-                    transition={{ duration: 2.2, repeat: Infinity, ease: "easeOut" }}
-                    className="absolute inset-0 rounded-full bg-brand-gold/25"
+                    animate={{ scale: 1.1, opacity: 0.2 }}
+                    transition={{ delay: 0.2, duration: 0.8, ease: "easeOut" }}
+                    className="absolute inset-2 rounded-full bg-brand-gold/10 border border-brand-gold/30"
                   />
                   
                   {/* High-fidelity custom drawn checkmark dynamic path */}
@@ -395,7 +423,7 @@ export default function ApplyForm() {
                       strokeLinecap="round"
                       initial={{ pathLength: 0, opacity: 0 }}
                       animate={{ pathLength: 1, opacity: 1 }}
-                      transition={{ duration: 0.65, ease: "easeOut" }}
+                      transition={{ duration: 0.8, ease: "easeOut" }}
                     />
                     <motion.path
                       d="M16 26l7 7 13-13"
@@ -405,16 +433,83 @@ export default function ApplyForm() {
                       strokeLinejoin="round"
                       initial={{ pathLength: 0 }}
                       animate={{ pathLength: 1 }}
-                      transition={{ duration: 0.52, delay: 0.55, ease: "easeInOut" }}
+                      transition={{ duration: 0.55, delay: 0.6, ease: "easeInOut" }}
                     />
                   </svg>
+
+                  {/* Sparkle effects on check completion */}
+                  <motion.div
+                    initial={{ scale: 0, rotation: 0, opacity: 0 }}
+                    animate={{ scale: [0, 1.2, 1], rotation: 45, opacity: [0, 1, 0] }}
+                    transition={{ delay: 1, duration: 1 }}
+                    className="absolute -top-1 -right-1 text-brand-gold"
+                  >
+                    ✦
+                  </motion.div>
+                  <motion.div
+                    initial={{ scale: 0, rotation: 0, opacity: 0 }}
+                    animate={{ scale: [0, 1.2, 1], rotation: -45, opacity: [0, 1, 0] }}
+                    transition={{ delay: 1.15, duration: 1 }}
+                    className="absolute -bottom-1 -left-2 text-brand-gold text-xs"
+                  >
+                    ✦
+                  </motion.div>
                 </div>
-                <h3 className="font-serif text-3xl text-brand-cream italic">Application Received</h3>
-                <p className="text-brand-cream-dim text-sm sm:text-base font-light max-w-sm leading-relaxed">
+
+                <div className="space-y-3">
+                  <motion.span 
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 }}
+                    className="font-mono text-[10px] uppercase tracking-widest text-brand-gold bg-brand-gold/10 px-3.5 py-1.5 rounded-full font-semibold inline-block"
+                  >
+                    Registration Secure
+                  </motion.span>
+                  <motion.h3 
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.6, duration: 0.5 }}
+                    className="font-serif text-3.5xl text-brand-cream italic leading-tight"
+                  >
+                    Application Received
+                  </motion.h3>
+                </div>
+
+                <motion.p 
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.8, duration: 0.5 }}
+                  className="text-brand-cream-dim text-sm sm:text-base font-light max-w-md leading-relaxed mx-auto"
+                >
                   Thank you for submitting, <span className="font-semibold text-brand-gold">{form.name}</span>. 
                   Our metropolitan coordinator will contact you at <span className="font-mono text-brand-gold font-medium">{form.phone}</span> within 2 hours to confirm your vehicle selection (<span className="text-brand-gold font-medium">{form.service}</span>).
-                </p>
-                <button
+                </motion.p>
+
+                {/* Secure Process Steps Visual Checklist */}
+                <motion.div 
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1.0, duration: 0.5 }}
+                  className="max-w-md w-full bg-brand-secondary/50 border border-brand-cream/5 rounded-[20px] p-5 text-left space-y-3.5 text-xs text-brand-cream-subtle"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="w-5 h-5 rounded-full bg-brand-gold/20 text-brand-gold font-mono flex items-center justify-center text-[10px] font-bold">1</span>
+                    <p className="font-light">Client profile submitted & security lock in progress.</p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="w-5 h-5 rounded-full bg-brand-gold/20 text-brand-gold font-mono flex items-center justify-center text-[10px] font-bold">2</span>
+                    <p className="font-light">Document screening queue (David at supporting dispatch).</p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="w-5 h-5 rounded-full bg-brand-gold/20 text-brand-gold font-mono flex items-center justify-center text-[10px] font-bold">3</span>
+                    <p className="font-light">Immediate SMS dispatch check-in or phone ringout.</p>
+                  </div>
+                </motion.div>
+
+                <motion.button
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1.2, duration: 0.5 }}
                   onClick={() => {
                     setSubmitSuccess(false);
                     setForm({
@@ -438,21 +533,21 @@ export default function ApplyForm() {
                     setLicenseFile(null);
                     setTripScreenshot(null);
                   }}
-                  className="px-6 py-3 bg-brand-gold text-brand-bg hover:bg-brand-gold-light transition-colors text-xs font-mono tracking-wider uppercase rounded-full font-bold"
+                  className="px-8 py-3.5 bg-brand-gold text-brand-bg hover:bg-brand-gold-light transition-all duration-300 text-xs font-mono tracking-wider uppercase rounded-full font-bold shadow-md shadow-brand-gold/10 hover:shadow-brand-gold/25"
                 >
                   Apply for Another Vehicle
-                </button>
-              </div>
+                </motion.button>
+              </motion.div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-8">
                 
                 {/* Step Info Indicator */}
                 <div className="mb-6 border-b border-brand-cream/5 pb-5">
-                  <div className="flex items-center justify-between mb-2.5">
-                    <span className="text-[10px] font-mono uppercase tracking-widest text-brand-cream-subtle font-bold">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 mb-3">
+                    <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-widest text-brand-cream-subtle font-bold leading-normal">
                       Step {currentStep} of 2 · {currentStep === 1 ? "Driver Profile & Fleet Choice" : "Verification & Scheduling"}
                     </span>
-                    <span className="text-[10px] font-mono font-bold text-brand-gold bg-brand-gold/10 px-2.5 py-1 rounded-full uppercase">
+                    <span className="text-[9px] sm:text-[10px] font-mono font-bold text-brand-gold bg-brand-gold/10 px-2.5 py-1 rounded-full uppercase self-start sm:self-auto shrink-0">
                       {currentStep === 1 ? "Section 1: 50% Complete" : "Section 2: Final Verification"}
                     </span>
                   </div>
@@ -487,7 +582,7 @@ export default function ApplyForm() {
                         <span className="text-[11px] font-semibold text-brand-cream-subtle uppercase tracking-widest block mb-3">
                           Selected Fleet Class
                         </span>
-                        <div className="flex flex-wrap gap-2">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                           {(vehicles.length > 0 ? vehicles : [
                             { id: "hatchback", title: "Hatchback Pro Series", price: "$150 / week" },
                             { id: "sedan", title: "Premium Sedan Range", price: "$200 / week" },
@@ -500,13 +595,14 @@ export default function ApplyForm() {
                                 key={item.title}
                                 type="button"
                                 onClick={() => setForm((f) => ({ ...f, service: item.title }))}
-                                className={`px-3.5 py-1.5 border rounded-full text-[11px] font-medium tracking-wide uppercase transition-all duration-200 cursor-pointer ${
+                                className={`w-full px-4 py-3 border rounded-xl text-xs font-semibold tracking-wide uppercase transition-all duration-200 cursor-pointer text-left flex items-center justify-between ${
                                   form.service === item.title
                                     ? "bg-[#1F3A2D] border-[#1F3A2D] text-white shadow-xs dark:bg-brand-gold dark:border-brand-gold dark:text-brand-bg"
-                                    : "bg-brand-secondary border-brand-cream-subtle/20 text-brand-cream-dim hover:bg-[#151515]"
+                                    : "bg-brand-secondary border-brand-cream-subtle/20 text-brand-cream-dim hover:bg-brand-secondary/80"
                                 }`}
                               >
-                                {item.title} ({trimmedPrice})
+                                <span>{item.title}</span>
+                                <span className={form.service === item.title ? "text-brand-cream dark:text-brand-bg opacity-90" : "text-brand-gold"}>{trimmedPrice}</span>
                               </button>
                             );
                           })}
@@ -514,7 +610,7 @@ export default function ApplyForm() {
                       </div>
 
                       {/* Text input grid matching full name, age, phone, email */}
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-7">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 sm:gap-x-12 gap-y-5 sm:gap-y-7">
                         {/* Full Name */}
                         <div className="space-y-1">
                           <label className="text-[11px] font-semibold text-brand-cream-subtle uppercase tracking-widest block">
@@ -717,7 +813,7 @@ export default function ApplyForm() {
                           <span className="text-[10px] font-mono uppercase tracking-widest text-[#827266] font-medium block">
                             Choose Available Date:
                           </span>
-                          <div className="grid grid-cols-4 sm:grid-cols-8 gap-2">
+                          <div className="grid grid-cols-4 sm:grid-cols-8 gap-1.5 sm:gap-2">
                             {calendarDays.map((day) => {
                               const isSelected = form.date === day.formattedValue;
                               return (
@@ -734,7 +830,7 @@ export default function ApplyForm() {
                                       returnDate: retStr
                                     }));
                                   }}
-                                  className={`flex flex-col items-center justify-center p-3 rounded-[12px] border transition-all duration-200 cursor-pointer ${
+                                  className={`flex flex-col items-center justify-center py-2 px-1 xs:p-2 sm:p-3 rounded-[10px] sm:rounded-[12px] border transition-all duration-200 cursor-pointer ${
                                     isSelected
                                       ? "bg-[#1F3A2D] border-[#1F3A2D] text-white shadow-md dark:bg-brand-gold dark:border-brand-gold dark:text-brand-bg"
                                       : "bg-[#FAF8F5] border-brand-cream-subtle/10 text-brand-cream-dim hover:border-brand-gold/50 dark:bg-brand-secondary"
@@ -850,7 +946,7 @@ export default function ApplyForm() {
 
                           <div
                             onClick={() => licenseInputRef.current?.click()}
-                            className={`border border-dashed rounded-[12px] p-5 flex items-center gap-4 cursor-pointer hover:bg-brand-secondary/40 transition-all duration-200 relative group ${
+                            className={`border border-dashed rounded-[12px] p-3.5 sm:p-5 flex items-center gap-3 sm:gap-4 cursor-pointer hover:bg-brand-secondary/40 transition-all duration-200 relative group ${
                               errors.licenseFile 
                                 ? "border-red-500 bg-red-500/5"
                                 : "border-brand-cream/20 bg-brand-bg"
@@ -893,7 +989,7 @@ export default function ApplyForm() {
 
                           <div
                             onClick={() => tripInputRef.current?.click()}
-                            className="border border-dashed border-brand-cream/20 bg-brand-bg rounded-[12px] p-5 flex items-center gap-4 cursor-pointer hover:bg-brand-secondary/40 transition-all duration-200 relative group"
+                            className="border border-dashed border-brand-cream/20 bg-brand-bg rounded-[12px] p-3.5 sm:p-5 flex items-center gap-3 sm:gap-4 cursor-pointer hover:bg-brand-secondary/40 transition-all duration-200 relative group"
                           >
                             <input
                               type="file"

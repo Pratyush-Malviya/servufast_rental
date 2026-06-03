@@ -148,41 +148,46 @@ export default function App() {
                 </div>
               </div>
             </section>
-            
-            <Suspense fallback={<SectionSkeleton />}>
-              <ApplyForm />
-            </Suspense>
           </main>
 
           <Footer />
+
+          {/* Premium Mobile Sticky Bottom CTA Bar */}
+          <div className="fixed bottom-0 left-0 w-full bg-[#060A08]/90 backdrop-blur-lg border-t border-brand-cream/10 py-3 px-5 sm:px-6 flex items-center justify-between z-40 lg:hidden shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
+            <div className="flex flex-col">
+              <span className="text-[9px] font-mono uppercase tracking-wider text-brand-cream-subtle font-bold leading-none">Vetted Fleet</span>
+              <span className="text-base font-serif italic text-brand-gold mt-1 leading-none">
+                ServU<span className="text-brand-cream font-sans not-italic font-medium">fast</span>
+              </span>
+            </div>
+            <div className="flex items-center gap-3">
+              <a
+                href={`tel:${contact.phoneTel}`}
+                className="p-2.5 bg-brand-bg/60 border border-brand-cream/15 rounded-full text-brand-cream hover:text-brand-gold hover:border-brand-gold/30 transition-all duration-300"
+                title="Call Support Hotline"
+                aria-label="Call Support Hotline"
+              >
+                <Phone size={14} className="text-brand-gold" />
+              </a>
+              <a
+                href="#apply"
+                className="px-5 py-3 bg-brand-gold hover:bg-brand-gold-light text-brand-bg text-[11px] font-sans font-bold tracking-widest uppercase rounded-full shadow-md shadow-brand-gold/10 hover:shadow-brand-gold/20 active:scale-95 transition-all duration-200"
+              >
+                Book Now
+              </a>
+            </div>
+          </div>
+
+          <Suspense fallback={<SectionSkeleton />}>
+            <ApplyForm />
+          </Suspense>
 
           {/* AI Chat Widget Concierge (Lazy loaded) */}
           <Suspense fallback={null}>
             <ChatWidget />
           </Suspense>
 
-          {/* Mobile Sticky Bottom CTA Bar */}
-          <div className="fixed bottom-0 left-0 w-full bg-brand-card/90 backdrop-blur-md border-t border-brand-cream/10 py-3.5 px-6 flex items-center justify-between z-40 lg:hidden shadow-lg">
-            <div className="flex flex-col">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-brand-cream-subtle font-semibold leading-none">Vetted Registry</span>
-              <span className="text-sm font-serif italic text-brand-gold leading-normal mt-0.5">{general.brandName} On-Demand</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <a
-                href={`tel:${contact.phoneTel}`}
-                className="p-2.5 border border-brand-cream/15 rounded-full text-brand-cream hover:text-brand-gold transition-colors"
-                title="Call Support Hotline"
-              >
-                <PhoneCall size={14} />
-              </a>
-              <a
-                href="#apply"
-                className="px-5 py-2.5 bg-brand-gold hover:bg-brand-gold-light text-brand-bg text-xs font-bold tracking-widest uppercase rounded-full shadow-md shadow-brand-gold/10 transition-colors"
-              >
-                Get Started
-              </a>
-            </div>
-          </div>
+
         </>
       )}
 
