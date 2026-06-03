@@ -55,7 +55,7 @@ const DEFAULT_BRAND_CONFIG = {
   },
   general: {
     brandName: "ServUfast",
-    brandSubtitle: "fast",
+    brandSubtitle: "",
     editionText: "Edition No. 01 · 2026",
     copyrightText: "© 2026 ServUfast LLC. All rights reserved. Registered under Delaware and United States Corporate Standards.",
   }
@@ -391,38 +391,34 @@ app.post("/api/gemini/chat", async (req, res) => {
 
   // Standardize instruction and brand background info
   const systemInstruction = `
-You are the dedicated AI Concierge and assistant for ServUfast (servufast.com).
-ServUfast is a premium, verified car rental platform operating in prime US metro areas (primarily San Francisco, Los Angeles, Seattle, Chicago, Boston).
-Our key business is rent-to-drive premium vehicles tailored for active gig drivers (Uber, Lyft, DoorDash, etc.), personal fleet seekers, and executive chauffeurs.
+You are David, the human Client Support Coordinator for ServUfast (servufast.com).
+You must ALWAYS speak and align yourself as a warm, human coordinator. Never say you are an AI, a machine, a model, or a bot.
+Speak with positive, genuine human helpfulness, conversational flows, friendly contractions (e.g., "I'm", "don't", "we've"), and straightforward answers. Avoid lists with complex bullets or headers. Never generate tables, code blocks, or robotic system logs.
 
-Our key model values/identity:
-- Luxury Editorial Style: elegant, high-contrast, professional, and refined.
-- A car that earns its own weekly rate: Vehicles are priced weekly of $150 to $290 based on standard metrics.
-- All-Inclusive Pricing: Zero unexpected maintenance charges, premium vehicle insurance included, unlimited gig mileage, and 24/7 client road assistance as standard.
-- Rapid Approval: Drive off the same day. Profile verification process takes under 24 hours.
+Strict knowledge constraint (Talk ONLY about details on the website):
+- Weekly Rates: Hatchback Pro ($150/week, Toyota Yaris/Honda Fit), Premium Sedan ($200/week, Toyota Corolla/Hyundai Elantra), Electric EV ($220/week, Tesla Model 3/Chevrolet Bolt EV), and Luxury Executive Series ($290/week, Toyota Sienna Hybrid).
+- Ideal for: Gig-driving applications (Uber, Lyft, DoorDash), personal fleet seekers, and elite high-end chauffeurs.
+- What is always included in the weekly rate: Complete all-inclusive premium commercial insurance, unlimited gig mileage, zero unexpected repairs or upkeep charges (all maintenance covered by us), and 24/7 roadside assistance.
+- Operation Metropolitan Areas: Serving SF, Los Angeles, Seattle, Chicago, and Boston.
+- Same-Day Approved Drive-Off: Verification screening takes under 24 hours. Depot pickup in under 1 hour from approval at central locations.
+- Requirements to apply: Active driver's license (DL), clean driving/background history record, ID or SSN/Tax ID verification, and a refundable security deposit.
+- Pricing structure: Standard flat weekly fee. Absolutely zero unexpected fees.
 
-We offer multiple premium vehicle configurations:
-1. Hatchback Pro (Toyota Yaris/Honda Fit) — Optimized for short city gig runs at $150/week.
-2. Premium Sedan Range (Toyota Corolla/Hyundai Elantra) — Perfect for high-tier airport transfers at $200/week.
-3. Electric Fleet (Tesla Model 3/Chevrolet Bolt EV) — Ultimate zero-emission cost saver at $220/week.
-4. Luxury Executive Series (Toyota Sienna Hybrid) — Top tier chauffeur and high-end transport at $290/week.
+STRICT CONFLICT AND EXTRA-DETAIL PROTOCOL:
+If the customer asks for ANY additional details, custom leasing period lengths, multi-car discounts, spec colors, contract customization, specific policy articles, exact depot garage street addresses, or any other out-of-scope details, you MUST:
+1. Politely state that one of our local executive managers can coordinate directly with them.
+2. Ask them to share their:
+   - Full Name
+   - Phone Number
+   - Email Address
+3. Once they have provided these details, or if they have already provided them in current messages, you MUST reply with this EXACT sentence:
+   "Thank you for sharing your details. I've noted this down, and our executive will reach out to you shortly to assist!"
 
-Your personality:
-- Courteous, highly professional, polite, direct, and slightly refined (reflecting a luxury editorial concierge tone).
-- Provide straightforward answers about weekly pricing, deposits, qualifications, or vehicle availability.
-- Promote our online estimator tool or enrollment form to book or reserve.
-- If asked about rates: Standard rates begin at $150 per week, everything included. There are no hidden processing fees.
-- If asked about qualifications: Requires valid driver screening, ID / SSN or Tax ID verification, a clean driving record and background history, an active driving license (DL), and a security deposit.
-
-Keep responses relatively brief, beautifully formatted with clean markdown, and focused on helping customers or partners reserve a vehicle.
+Keep your replies highly natural, personal, short, and focused.
 `;
 
   try {
     // Reconstruct conversation messages for API
-    // The @google/genai SDK chats.create allows using system instructions.
-    // Let's create a formatted text prompt or use chats.sendMessage
-    
-    // We can compile history into a single structured prompt or use chats
     let conversationHistory = systemInstruction + "\n\n";
     messages.forEach((msg: any) => {
       const roleName = msg.sender === "user" ? "User" : "Assistant";
@@ -436,6 +432,61 @@ Keep responses relatively brief, beautifully formatted with clean markdown, and 
     });
 
     const replyText = response.text || "I apologize, but I could not compute a response at this moment. Please call us or submit our form.";
+    
+    // Auto-detect and save chat lead if contact details were gathered and executive will reach out
+    try {
+      const lowerReply = replyText.toLowerCase();
+      if (lowerReply.includes("executive will reach out") || lowerReply.includes("reach out shortly")) {
+        let extractedName = "";
+        let extractedPhone = "";
+        let extractedEmail = "";
+        
+        // Loop backwards in user messages to extract name, email, phone
+        for (let i = messages.length - 1; i >= 0; i--) {
+          const msg = messages[i];
+          if (msg.sender === "user") {
+            const text = msg.text;
+            
+            // Extract Email
+            const emailMatch = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+            if (emailMatch && !extractedEmail) {
+              extractedEmail = emailMatch[0];
+            }
+            
+            // Extract Phone
+            const phoneMatch = text.match(/(\+?\d{1,4}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}/);
+            if (phoneMatch && !extractedPhone) {
+              extractedPhone = phoneMatch[0];
+            }
+            
+            // Extract Name (simple heuristic)
+            const nameMatch = text.match(/(?:my name is|i am|this is|name:?)\s+([a-zA-Z'\s]{2,30})/i);
+            if (nameMatch && !extractedName) {
+              extractedName = nameMatch[1].trim();
+            } else if (!extractedName && text.split(/\s+/).length <= 3 && !emailMatch && !phoneMatch) {
+              extractedName = text.trim();
+            }
+          }
+        }
+        
+        if (extractedPhone || extractedEmail) {
+          saveLead({
+            name: extractedName || "Chat User",
+            phone: extractedPhone || "Not provided",
+            email: extractedEmail || "Not provided",
+            city: "Chat Inquiry",
+            service: "Chat Lead",
+            date: new Date().toISOString().split('T')[0],
+            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            newCustomer: "Yes",
+            message: `Lead captured via Live Support Chat. Full details: ${messages.map((m: any) => m.sender + ": " + m.text).join(" | ")}`
+          });
+        }
+      }
+    } catch (saveErr) {
+      console.error("Failed to parse and save lead from chat thread:", saveErr);
+    }
+
     res.json({ reply: replyText });
   } catch (error: any) {
     console.error("Gemini API Error:", error);

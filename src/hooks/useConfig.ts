@@ -92,7 +92,7 @@ export function useConfig() {
       },
       general: {
         brandName: "ServUfast",
-        brandSubtitle: "fast",
+        brandSubtitle: "",
         editionText: "Edition No. 01 · 2026",
         copyrightText: "© 2026 ServUfast LLC. All rights reserved. Registered under Delaware and United States Corporate Standards.",
       },

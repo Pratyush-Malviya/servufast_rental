@@ -19,7 +19,7 @@ export default function ChatWidget() {
         {
           id: "intro",
           sender: "bot",
-          text: `Hello! I'm David, your Client Support Coordinator at ${general?.brandName || "ServUfast"}${general?.brandSubtitle || "fast"}. If you have any questions about our standard rent-to-drive premium fleet, weekly rates, document qualifications, or rapid depot pickup locations, please let me know.`,
+          text: `Hello! I'm David, your Client Support Coordinator here at ${general?.brandName || "ServUfast"}. If you have any questions about our standard rent-to-drive premium fleet, weekly rates, qualifications, or pickup locations, feel free to ask!`,
           timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         }
       ]);
@@ -89,7 +89,7 @@ export default function ChatWidget() {
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="w-14 h-14 rounded-full bg-brand-gold hover:bg-brand-gold-light text-brand-bg flex items-center justify-center shadow-xl shadow-brand-gold/15 transition-all duration-300 relative cursor-pointer group"
-          aria-label="Contact AI Concierge"
+          aria-label="Client Support Chat"
         >
           {isOpen ? <X size={24} /> : <MessageSquare size={24} />}
           {!isOpen && (
@@ -115,16 +115,16 @@ export default function ChatWidget() {
             <div className="p-4 bg-brand-muted/70 border-b border-brand-cream/5 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-brand-gold/15 border border-brand-gold/30 flex items-center justify-center text-brand-gold">
-                  <Sparkles size={16} />
+                  <Headphones size={16} />
                 </div>
                 <div>
                   <h4 className="font-serif text-sm font-semibold text-brand-cream">
-                    ServUfast Concierge
+                    Live Chat Support
                   </h4>
                   <div className="flex items-center gap-1.5">
                     <span className="live-indicator shrink-0"></span>
                     <span className="text-[10px] font-mono uppercase tracking-widest text-brand-gold font-medium">
-                      Replies Instantly
+                      David · Coordinator
                     </span>
                   </div>
                 </div>
@@ -150,7 +150,7 @@ export default function ChatWidget() {
                         ? "bg-brand-muted text-brand-gold border-brand-gold/20" 
                         : "bg-brand-gold/15 text-brand-cream border-brand-cream/10"
                     }`}>
-                      {isBot ? <Bot size={13} /> : <User size={13} />}
+                      {isBot ? <Headphones size={13} /> : <User size={13} />}
                     </div>
 
                     {/* Speech Text Bubble */}
@@ -172,7 +172,7 @@ export default function ChatWidget() {
               {isTyping && (
                 <div className="flex gap-2.5">
                   <div className="w-8 h-8 rounded-full bg-brand-muted text-brand-gold border border-brand-gold/20 flex items-center justify-center shrink-0">
-                    <Bot size={13} />
+                    <Headphones size={13} />
                   </div>
                   <div className="bg-brand-muted/50 border border-brand-cream/5 p-3.5 rounded-[14px] flex items-center gap-1">
                     <span className="w-1.5 h-1.5 bg-brand-gold rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />

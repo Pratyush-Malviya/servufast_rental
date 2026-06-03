@@ -46,6 +46,7 @@ export default function Navbar() {
     { label: "Fleet Options", href: "#fleet" },
     { label: "Qualifications", href: "#requirements" },
     { label: "FAQs", href: "#faq" },
+    { label: "Contact Desk", href: "#contact" },
   ];
 
   return (
@@ -62,7 +63,11 @@ export default function Navbar() {
             href="#top"
             className="font-serif text-2xl tracking-normal text-brand-cream hover:text-brand-gold transition-colors duration-200"
           >
-            {general.brandName}<span className="italic font-light text-brand-gold">{general.brandSubtitle}</span>
+            {general.brandName === "ServUfast" ? (
+              <>ServU<span className="italic font-light text-brand-gold">fast</span></>
+            ) : (
+              <>{general.brandName}<span className="italic font-light text-brand-gold">{general.brandSubtitle}</span></>
+            )}
           </a>
 
           {/* Desktop Menu */}

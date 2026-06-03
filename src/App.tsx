@@ -18,6 +18,7 @@ const Fleet = lazy(() => import("./components/Fleet"));
 const Requirements = lazy(() => import("./components/Requirements"));
 const Testimonials = lazy(() => import("./components/Testimonials"));
 const FAQ = lazy(() => import("./components/FAQ"));
+const ContactSection = lazy(() => import("./components/ContactSection"));
 const ApplyForm = lazy(() => import("./components/ApplyForm"));
 const ChatWidget = lazy(() => import("./components/ChatWidget"));
 const AdminPanel = lazy(() => import("./components/AdminPanel"));
@@ -84,6 +85,10 @@ export default function App() {
             
             <Suspense fallback={<SectionSkeleton />}>
               <FAQ />
+            </Suspense>
+
+            <Suspense fallback={<SectionSkeleton />}>
+              <ContactSection />
             </Suspense>
 
             {/* Final High-Fidelity Call-to-Action Section */}

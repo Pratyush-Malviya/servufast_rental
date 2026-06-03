@@ -29,10 +29,14 @@ export default function Footer() {
               href="#top"
               className="font-serif text-3xl tracking-normal text-brand-cream hover:text-brand-gold transition-colors block"
             >
-              {general.brandName}<span className="italic font-light text-brand-gold">{general.brandSubtitle}</span>
+              {general.brandName === "ServUfast" ? (
+                <>ServU<span className="italic font-light text-brand-gold">fast</span></>
+              ) : (
+                <>{general.brandName}<span className="italic font-light text-brand-gold">{general.brandSubtitle}</span></>
+              )}
             </a>
             <p className="text-xs text-brand-cream-dim leading-relaxed font-light max-w-sm">
-              {general.brandName}{general.brandSubtitle} is the premier rent-to-drive car fleet network. We provide zero-maintenance premium hatchbacks, executive sedans, and high-saving electric EVs equipped with complete commercial registration and comprehensive insurance coverage.
+              {general.brandName} is the premier rent-to-drive car fleet network. We provide zero-maintenance premium hatchbacks, executive sedans, and high-saving electric EVs equipped with complete commercial registration and comprehensive insurance coverage.
             </p>
             {/* Social Icons Row styled premiumly */}
             <div className="flex flex-wrap gap-2 pt-2">
@@ -79,6 +83,11 @@ export default function Footer() {
               <li>
                 <a href="#faq" className="hover:text-brand-gold transition-colors block py-0.5">
                   Reservation FAQs
+                </a>
+              </li>
+              <li>
+                <a href="#contact" className="hover:text-brand-gold transition-colors block py-0.5 font-semibold text-brand-gold">
+                  Inquire / Contact Desk
                 </a>
               </li>
             </ul>
