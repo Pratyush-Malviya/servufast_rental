@@ -354,7 +354,7 @@ export default function ApplyForm() {
       />
       
       {/* Scrollable Container */}
-      <div className="relative w-full max-w-5xl max-h-[92vh] sm:max-h-[85vh] overflow-y-auto bg-brand-card border border-brand-cream/15 rounded-[28px] sm:rounded-[36px] shadow-2xl z-10 m-4 text-brand-cream">
+      <div className="relative w-full max-w-2xl max-h-[92vh] sm:max-h-[85vh] overflow-y-auto bg-brand-card border border-brand-cream/15 rounded-[28px] sm:rounded-[36px] shadow-2xl z-10 m-4 text-brand-cream">
         
         {/* Close Button or Back trigger */}
         <button
@@ -366,88 +366,8 @@ export default function ApplyForm() {
           <X size={18} className="group-hover:rotate-90 transition-transform duration-300" />
         </button>
 
-        <div className="p-6 sm:p-10 md:p-14">
-          {/* Main Grid: Info Left, Form Right */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+        <div className="p-6 sm:p-10 md:p-12">
           
-          {/* Left Block: Contact Details */}
-          <div className="lg:col-span-4 space-y-10">
-            <div>
-              <span className="font-mono text-xs uppercase tracking-widest text-brand-gold font-semibold">
-                Vetted Fleet Booking
-              </span>
-              <h2 className="text-3xl md:text-5xl text-brand-cream mt-2 leading-tight">
-                Secure your ride <em className="text-brand-cream-dim font-serif italic font-normal">your way</em> today.
-              </h2>
-              <p className="text-brand-cream-dim font-light text-base mt-2 leading-relaxed">
-                Complete our secure application form. Our metropolitan agency gets in touch inside 2 hours 
-                to verify your credentials, finalize the weekly lease structure, and schedule your same-day vehicle pickup.
-              </p>
-            </div>
-
-            {/* Quick Specs Block */}
-            <div className="space-y-6 pt-2">
-              <div className="flex items-start gap-4">
-                <div className="p-3 rounded-full bg-brand-secondary text-brand-gold border border-brand-cream/5">
-                  <Phone size={18} />
-                </div>
-                <div>
-                  <h4 className="font-mono text-[10px] uppercase tracking-widest text-brand-cream-subtle font-semibold">
-                    Support Hotline & SMS
-                  </h4>
-                  <a href={`tel:${contact.phoneTel}`} className="text-brand-cream font-mono text-sm hover:text-brand-gold transition-colors">
-                    {contact.phone}
-                  </a>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <div className="p-3 rounded-full bg-brand-secondary text-brand-gold border border-brand-cream/5">
-                  <MapPin size={18} />
-                </div>
-                <div>
-                  <h4 className="font-mono text-[10px] uppercase tracking-widest text-brand-cream-subtle font-semibold">
-                    Metropolitan Dispatch Hubs
-                  </h4>
-                  <p className="text-brand-cream text-sm font-light leading-relaxed">
-                    San Francisco · Los Angeles · Seattle · Chicago · Boston
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <div className="p-3 rounded-full bg-brand-secondary text-brand-gold border border-brand-cream/5">
-                  <Clock size={18} />
-                </div>
-                <div>
-                  <h4 className="font-mono text-[10px] uppercase tracking-widest text-brand-cream-subtle font-semibold">
-                    Depot Operating Hours
-                  </h4>
-                  <p className="text-brand-cream text-sm font-light">
-                    24 Hours / 7 Days On-Demand Dispatch Support
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <div className="p-3 rounded-full bg-brand-secondary text-brand-gold border border-brand-cream/5">
-                  <CreditCard size={18} />
-                </div>
-                <div>
-                  <h4 className="font-mono text-[10px] uppercase tracking-widest text-brand-cream-subtle font-semibold">
-                    Flexible Billing & Escrow Tiers
-                  </h4>
-                  <p className="text-brand-cream text-sm font-light">
-                    Immediate driver verification, Cash/Zelle due at pickup, with standard 100% refundable deposits
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Right Block: Pure High-Fidelity Form design exactly like image */}
-          <div className="lg:col-span-8 bg-brand-card border border-brand-cream-subtle/10 p-8 sm:p-12 rounded-[24px] shadow-sm relative text-brand-cream">
-            
             {submitSuccess ? (
               <div className="py-12 px-6 text-center space-y-6 flex flex-col items-center justify-center">
                 <div className="relative w-20 h-20 flex items-center justify-center mb-2">
@@ -1106,12 +1026,9 @@ export default function ApplyForm() {
               </form>
             )}
 
-          </div>
-
         </div>
 
       </div>
     </div>
-  </div>
   );
 }
