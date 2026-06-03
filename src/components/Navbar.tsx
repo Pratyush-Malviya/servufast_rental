@@ -53,11 +53,19 @@ export default function Navbar() {
     <>
       <nav
         id="navbar"
-        className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-          scrolled ? "nav-scrolled py-4" : "bg-transparent py-6"
+        className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ease-out ${
+          scrolled 
+            ? "py-3 px-4 sm:px-6 md:px-8 bg-transparent" 
+            : "py-6 px-6 bg-transparent"
         }`}
       >
-        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+        <div 
+          className={`mx-auto flex items-center justify-between transition-all duration-500 ease-out ${
+            scrolled
+              ? "max-w-5xl bg-[#FCFBFA]/85 dark:bg-[#060A08]/75 backdrop-blur-xl px-6 sm:px-8 py-2.5 rounded-full border border-brand-cream/10 dark:border-brand-cream/15 shadow-[0_20px_50px_rgba(0,0,0,0.15)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
+              : "max-w-7xl px-2 w-full"
+          }`}
+        >
           {/* Logo */}
           <a
             href="#top"
@@ -71,40 +79,42 @@ export default function Navbar() {
           </a>
 
           {/* Desktop Menu */}
-          <div className="hidden lg:flex items-center space-x-8">
+          <div className="hidden lg:flex items-center space-x-2">
             {menuItems.map((item) => (
               <a
                 key={item.href}
                 href={item.href}
-                className="font-sans text-xs tracking-widest uppercase text-brand-cream-dim hover:text-brand-gold transition-colors duration-200"
+                className="relative font-sans text-[10px] font-bold tracking-widest uppercase text-brand-cream-dim hover:text-brand-cream px-3 py-2 rounded-full hover:bg-brand-cream/5 transition-all duration-300 group"
               >
                 {item.label}
+                <span className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-1 h-1 bg-brand-gold rounded-full scale-0 group-hover:scale-100 transition-transform duration-300" />
               </a>
             ))}
           </div>
 
           {/* Desktop Actions */}
-          <div className="hidden lg:flex items-center space-x-6">
+          <div className="hidden lg:flex items-center space-x-4">
             <a
               href={`tel:${contact.phoneTel}`}
-              className="flex items-center gap-2 font-mono text-xs text-brand-cream-dim hover:text-brand-gold transition-colors duration-200"
+              className="flex items-center gap-2 px-3.5 py-1.5 bg-brand-cream/5 hover:bg-brand-cream/10 border border-brand-cream/5 rounded-full font-mono text-xs text-brand-cream hover:text-brand-gold transition-all duration-300"
             >
-              <PhoneCall size={14} className="text-brand-gold" />
-              {contact.phone}
+              <PhoneCall size={12} className="text-brand-gold animate-pulse" />
+              <span className="tracking-wide">{contact.phone}</span>
             </a>
             <button
               onClick={() => setIsDark(!isDark)}
-              className="p-2.5 rounded-full border border-brand-cream/15 hover:border-brand-gold text-brand-cream-dim hover:text-brand-gold transition-all duration-200 bg-brand-bg/40 backdrop-blur-md cursor-pointer"
+              className="p-2 rounded-full bg-brand-cream/5 hover:bg-brand-cream/10 border border-brand-cream/10 hover:border-brand-gold text-brand-cream hover:text-brand-gold transition-all duration-300 cursor-pointer"
               title={isDark ? "Switch to Light Mode" : "Switch to VIP Dark Mode"}
               aria-label="Toggle theme"
             >
-              {isDark ? <Sun size={14} className="text-brand-gold" /> : <Moon size={14} className="text-brand-gold" />}
+              {isDark ? <Sun size={13} className="text-brand-gold" /> : <Moon size={13} className="text-brand-gold" />}
             </button>
             <a
               href="#apply"
-              className="inline-flex items-center px-5 py-2.5 bg-brand-gold text-brand-bg text-xs font-semibold tracking-widest uppercase rounded-full hover:bg-brand-gold-light hover:scale-102 active:scale-98 transition-all duration-200"
+              className="inline-flex items-center gap-1.5 px-5 py-2 bg-brand-gold text-brand-bg text-[10px] font-bold tracking-widest uppercase rounded-full hover:bg-brand-gold-light hover:shadow-lg hover:shadow-brand-gold/15 hover:scale-[1.03] active:scale-[0.97] transition-all duration-300 group/btn"
             >
-              Get Started
+              <span>Get Started</span>
+              <span className="transform group-hover/btn:translate-x-1 transition-transform duration-200 font-mono">→</span>
             </a>
           </div>
 

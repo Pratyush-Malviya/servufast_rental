@@ -92,6 +92,20 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
     editionText: "",
     copyrightText: "",
   });
+
+  const [showSmtpPanel, setShowSmtpPanel] = useState(false);
+  const [isSavingSmtp, setIsSavingSmtp] = useState(false);
+  const [showSmtpPass, setShowSmtpPass] = useState(false);
+  const [smtpForm, setSmtpForm] = useState({
+    enabled: false,
+    host: "",
+    port: "587",
+    secure: false,
+    user: "",
+    pass: "",
+    sender: "ServUfast Fleet <no-reply@servufast.com>",
+    adminEmail: "registration@servufast.com",
+  });
   const [newVehicleForm, setNewVehicleForm] = useState({
     title: "",
     description: "",
@@ -225,6 +239,18 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
           editionText: cData.general?.editionText || "",
           copyrightText: cData.general?.copyrightText || "",
         });
+        if (cData.smtp) {
+          setSmtpForm({
+            enabled: cData.smtp.enabled || false,
+            host: cData.smtp.host || "",
+            port: String(cData.smtp.port || "587"),
+            secure: cData.smtp.secure || false,
+            user: cData.smtp.user || "",
+            pass: cData.smtp.pass || "",
+            sender: cData.smtp.sender || "",
+            adminEmail: cData.smtp.adminEmail || "",
+          });
+        }
       }
     } catch (e: any) {
       console.error(e);
@@ -351,6 +377,44 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
       showToast(err.message || "Could not synchronize brand settings.", "error");
     } finally {
       setIsSavingBrand(false);
+    }
+  };
+
+  const handleSaveSmtpForm = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSavingSmtp(true);
+    try {
+      const response = await fetch("/api/admin/config", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          passcode: passcode.trim(),
+          config: {
+            smtp: {
+              enabled: smtpForm.enabled,
+              host: smtpForm.host.trim(),
+              port: smtpForm.port.trim(),
+              secure: smtpForm.secure,
+              user: smtpForm.user.trim(),
+              pass: smtpForm.pass,
+              sender: smtpForm.sender.trim(),
+              adminEmail: smtpForm.adminEmail.trim(),
+            }
+          }
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to update SMTP settings.");
+      }
+
+      showToast("SMTP server & booking alert credentials saved successfully.", "success");
+      setShowSmtpPanel(false);
+    } catch (err: any) {
+      showToast(err.message || "Could not synchronize SMTP server configurations.", "error");
+    } finally {
+      setIsSavingSmtp(false);
     }
   };
 
@@ -695,6 +759,7 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
               onClick={() => {
                 setShowBrandPanel(!showBrandPanel);
                 setShowSecurityCard(false);
+                setShowSmtpPanel(false);
               }}
               className={`inline-flex items-center gap-2 px-4 py-2.5 border text-xs font-mono tracking-wider uppercase rounded-full transition-colors cursor-pointer ${
                 showBrandPanel 
@@ -703,6 +768,20 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
               }`}
             >
               <Globe size={12} className={showBrandPanel ? "text-brand-gold scale-110" : "text-brand-cream"} /> Brand & Social Links
+            </button>
+            <button
+              onClick={() => {
+                setShowSmtpPanel(!showSmtpPanel);
+                setShowBrandPanel(false);
+                setShowSecurityCard(false);
+              }}
+              className={`inline-flex items-center gap-2 px-4 py-2.5 border text-xs font-mono tracking-wider uppercase rounded-full transition-colors cursor-pointer ${
+                showSmtpPanel 
+                  ? "border-brand-gold bg-brand-gold/10 text-brand-gold font-bold" 
+                  : "border-brand-cream/20 text-brand-cream hover:text-brand-gold hover:border-brand-gold/45 hover:bg-brand-secondary/40"
+              }`}
+            >
+              <Mail size={12} className={showSmtpPanel ? "text-brand-gold scale-110" : "text-brand-cream"} /> SMTP & Confirmation Setup
             </button>
             <button
               onClick={() => setIsAuthenticated(false)}
@@ -1078,6 +1157,205 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
                     ) : (
                       <>
                         Commit Brand Changes
+                      </>
+                    )}
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* SMTP Server & Notification Configurations */}
+        <AnimatePresence>
+          {showSmtpPanel && (
+            <motion.div
+              initial={{ opacity: 0, height: 0, y: -10 }}
+              animate={{ opacity: 1, height: "auto", y: 0 }}
+              exit={{ opacity: 0, height: 0, y: -10 }}
+              transition={{ duration: 0.35, ease: "easeInOut" }}
+              className="overflow-hidden bg-brand-card/90 backdrop-blur-md border border-brand-gold/20 rounded-[20px] p-6 sm:p-8 space-y-6"
+            >
+              <div className="flex items-start justify-between pb-4 border-b border-brand-cream/5">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <Mail className="text-brand-gold shrink-0" size={18} />
+                    <h3 className="font-serif text-lg text-brand-cream font-medium">
+                      SMTP Email Setup & Booking Confirmation
+                    </h3>
+                  </div>
+                  <p className="text-xs text-brand-cream-dim leading-relaxed font-light">
+                    Establish SMTP server specifications to automatically transmit stylish confirmation messages to visitors who file forms, and copy alerts to the administration.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowSmtpPanel(false)}
+                  className="p-1 px-2.5 text-[10px] font-mono border border-brand-cream/10 rounded-md hover:border-brand-gold hover:text-brand-gold text-brand-cream-dim transition-colors cursor-pointer uppercase"
+                >
+                  Close
+                </button>
+              </div>
+
+              <form onSubmit={handleSaveSmtpForm} className="space-y-6">
+                <div className="flex items-center gap-3 bg-brand-bg/50 p-4 rounded-2xl border border-brand-cream/5 text-left">
+                  <input
+                    type="checkbox"
+                    id="smtp_enabled"
+                    checked={smtpForm.enabled}
+                    onChange={(e) => setSmtpForm({ ...smtpForm, enabled: e.target.checked })}
+                    className="w-4 h-4 rounded text-brand-gold bg-brand-bg border-brand-cream/25 focus:ring-0 cursor-pointer accent-brand-gold"
+                  />
+                  <div className="text-left">
+                    <label htmlFor="smtp_enabled" className="text-xs font-mono uppercase tracking-wider text-brand-cream font-bold cursor-pointer">
+                      Enable Automated Email Dispatches
+                    </label>
+                    <p className="text-[11px] text-brand-cream-dim">
+                      Toggle active dispatch routing. If disabled or settings are void, email notifications will be suppressed.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
+                  {/* Left Column */}
+                  <div className="space-y-4">
+                    <div className="space-y-1.5">
+                      <label className="text-[9px] font-mono tracking-wider uppercase text-brand-cream-subtle font-semibold block">
+                        SMTP Mail Host
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="e.g. smtp.gmail.com or smtp.mailgun.org"
+                        value={smtpForm.host}
+                        onChange={(e) => setSmtpForm({ ...smtpForm, host: e.target.value })}
+                        className="w-full bg-brand-bg text-brand-cream border border-brand-cream/15 rounded-xl px-4 py-2.5 text-xs focus:border-brand-gold focus:outline-none transition-all placeholder:text-brand-cream-subtle/20 font-mono text-[11px]"
+                        required={smtpForm.enabled}
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-1.5">
+                        <label className="text-[9px] font-mono tracking-wider uppercase text-brand-cream-subtle font-semibold block">
+                          SMTP Port
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="e.g. 587 or 465"
+                          value={smtpForm.port}
+                          onChange={(e) => setSmtpForm({ ...smtpForm, port: e.target.value })}
+                          className="w-full bg-brand-bg text-brand-cream border border-brand-cream/15 rounded-xl px-4 py-2.5 text-xs focus:border-brand-gold focus:outline-none transition-all placeholder:text-brand-cream-subtle/20 font-mono text-[11px]"
+                          required={smtpForm.enabled}
+                        />
+                      </div>
+
+                      <div className="space-y-1.5 flex flex-col justify-end pb-1">
+                        <div className="flex items-center gap-2 py-2">
+                          <input
+                            type="checkbox"
+                            id="smtp_secure"
+                            checked={smtpForm.secure}
+                            onChange={(e) => setSmtpForm({ ...smtpForm, secure: e.target.checked })}
+                            className="w-3.5 h-3.5 rounded text-brand-gold bg-brand-bg border-brand-cream/25 focus:ring-0 cursor-pointer accent-brand-gold"
+                          />
+                          <label htmlFor="smtp_secure" className="text-[10px] font-mono uppercase tracking-wider text-brand-cream-dim cursor-pointer font-bold">
+                            SSL Connection (465)
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-[9px] font-mono tracking-wider uppercase text-brand-cream-subtle font-semibold block">
+                        Sender Identity Name & Address (From)
+                      </label>
+                      <input
+                        type="text"
+                        placeholder='e.g. ServUfast Rentals <no-reply@servufast.com>'
+                        value={smtpForm.sender}
+                        onChange={(e) => setSmtpForm({ ...smtpForm, sender: e.target.value })}
+                        className="w-full bg-brand-bg text-brand-cream border border-brand-cream/15 rounded-xl px-4 py-2.5 text-xs focus:border-brand-gold focus:outline-none transition-all placeholder:text-brand-cream-subtle/20 font-mono text-[11px]"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Right Column */}
+                  <div className="space-y-4">
+                    <div className="space-y-1.5">
+                      <label className="text-[9px] font-mono tracking-wider uppercase text-brand-cream-subtle font-semibold block">
+                        Auth User / Email Account
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="e.g. credentials@yourdomain.com"
+                        value={smtpForm.user}
+                        onChange={(e) => setSmtpForm({ ...smtpForm, user: e.target.value })}
+                        className="w-full bg-brand-bg text-brand-cream border border-brand-cream/15 rounded-xl px-4 py-2.5 text-xs focus:border-brand-gold focus:outline-none transition-all placeholder:text-brand-cream-subtle/20 font-mono text-[11px]"
+                        required={smtpForm.enabled}
+                      />
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-[9px] font-mono tracking-wider uppercase text-brand-cream-subtle font-semibold block">
+                        Auth Secret / Application Password
+                      </label>
+                      <div className="relative">
+                        <input
+                          type={showSmtpPass ? "text" : "password"}
+                          placeholder="••••••••••••••••"
+                          value={smtpForm.pass}
+                          onChange={(e) => setSmtpForm({ ...smtpForm, pass: e.target.value })}
+                          className="w-full bg-brand-bg text-brand-cream border border-brand-cream/15 rounded-xl pl-4 pr-10 py-2.5 text-xs focus:border-brand-gold focus:outline-none transition-all placeholder:text-brand-cream-subtle/20 font-mono text-[11px]"
+                          required={smtpForm.enabled && !smtpForm.pass}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowSmtpPass(!showSmtpPass)}
+                          className="absolute right-3.5 top-1/2 -translate-y-1/2 text-brand-cream-dim hover:text-brand-gold transition-colors cursor-pointer"
+                        >
+                          <Eye size={13} />
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-[9px] font-mono tracking-wider uppercase text-brand-cream-subtle font-semibold block">
+                        Admin Alerts Copy Target Address (To)
+                      </label>
+                      <input
+                        type="email"
+                        placeholder="e.g. registration@servufast.com"
+                        value={smtpForm.adminEmail}
+                        onChange={(e) => setSmtpForm({ ...smtpForm, adminEmail: e.target.value })}
+                        className="w-full bg-brand-bg text-brand-cream border border-brand-cream/15 rounded-xl px-4 py-2.5 text-xs focus:border-brand-gold focus:outline-none transition-all placeholder:text-brand-cream-subtle/20 font-mono text-[11px]"
+                      />
+                      <p className="text-[10px] text-brand-cream-subtle/70 leading-relaxed font-light">
+                        Leave this blank to auto-fall back to the primary brand corporate contact email.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex justify-end gap-3 pt-6 border-t border-brand-cream/5 font-mono">
+                  <button
+                    type="button"
+                    onClick={() => setShowSmtpPanel(false)}
+                    className="px-5 py-3 border border-brand-cream/10 text-brand-cream hover:border-brand-gold text-xs uppercase rounded-xl transition-all cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isSavingSmtp}
+                    className="px-6 py-3 bg-brand-gold hover:bg-brand-gold-light text-brand-bg text-xs font-sans font-bold tracking-widest uppercase rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-45"
+                  >
+                    {isSavingSmtp ? (
+                      <>
+                        <RefreshCw size={12} className="animate-spin" />
+                        Saving System Settings...
+                      </>
+                    ) : (
+                      <>
+                        Commit SMTP Settings
                       </>
                     )}
                   </button>
